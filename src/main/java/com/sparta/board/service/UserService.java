@@ -30,16 +30,16 @@ public class UserService {
         // 회원 중복 확인
         Optional<User> found = userRepository.findByUsername(username);
         if (found.isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
+            throw new IllegalArgumentException("중복된 username입니다.");
         }
 
         // 사용자 ROLE 확인
-        UserRoleEnum role = UserRoleEnum.USER;
+        UserRoleEnum role = UserRoleEnum.ADMIN;
         if (signupRequestDto.isAdmin()) {
             if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
                 throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
             }
-            role = UserRoleEnum.ADMIN;
+            role = UserRoleEnum.USER;
         }
 
         User user = new User(username, password, role);
@@ -53,7 +53,7 @@ public class UserService {
 
         // 사용자 확인
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
+                () -> new IllegalArgumentException("회원을 찾을 수 없습니다.")
         );
 
         // 비밀번호 확인

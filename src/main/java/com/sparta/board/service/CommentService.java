@@ -5,6 +5,7 @@ import com.sparta.board.dto.CommentDto;
 import com.sparta.board.entity.Board;
 import com.sparta.board.entity.Comment;
 import com.sparta.board.entity.User;
+import com.sparta.board.entity.UserRoleEnum;
 import com.sparta.board.jwt.JwtUtil;
 import com.sparta.board.repository.BoardRepository;
 import com.sparta.board.repository.CommentRepository;
@@ -56,7 +57,20 @@ public class CommentService {
 
     public CommentDto updateComment(CommentDto commentDto, Long id, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
-        Claims claims;
+        Claims claims = jwtUtil.getUserInfoFromToken(token);
+
+        User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+        );
+        if (user.getRole() == UserRoleEnum.ADMIN) {
+            Optional<Comment> optionalCommnet = commentRepository.findById(id);
+            Comment comment = optionalCommnet.orElseThrow(
+                    () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
+            );
+            comment.update(commentDto);
+            return new CommentDto(commentRepository.save(comment));
+        }
+
 
         if (token != null) {
             // Token 검증
@@ -72,18 +86,30 @@ public class CommentService {
             );
 
             if (comment.getCommentUsername().equals(claims.getSubject())) {
-                 comment.update(commentDto);
+                comment.update(commentDto);
+                return new CommentDto(commentRepository.save(comment));
             } else {
                 throw new IllegalArgumentException("댓글 작성자만 수정 할 수 있습니다.");
             }
-            return new CommentDto(commentRepository.save(comment));
         }
         throw new IllegalArgumentException("토큰이 존재하지 않습니다.");
     }
 
     public CommentDto deleteComment(Long id, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
-        Claims claims;
+        Claims claims = jwtUtil.getUserInfoFromToken(token);
+
+        User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+        );
+        if (user.getRole() == UserRoleEnum.ADMIN) {
+            Optional<Comment> optionalCommnet = commentRepository.findById(id);
+            Comment comment = optionalCommnet.orElseThrow(
+                    () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
+            );
+            commentRepository.delete(comment);
+            return new CommentDto(comment);
+        }
 
         if (token != null) {
             // Token 검증

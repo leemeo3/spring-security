@@ -9,6 +9,8 @@ import com.sparta.board.entity.UserRoleEnum;
 import com.sparta.board.jwt.JwtUtil;
 import com.sparta.board.repository.BoardRepository;
 import com.sparta.board.repository.UserRepository;
+import com.sparta.board.util.exception.ErrorCode;
+import com.sparta.board.util.exception.RequestException;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,18 +41,17 @@ public class BoardService {
                 // 토큰에서 사용자 정보 가져오기
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
-                throw new IllegalArgumentException("유효하지 않은 토큰입니다");
+                throw new RequestException(ErrorCode.BAD_TOKEN_400);
             }
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                    () -> new RequestException(ErrorCode.NULL_USER_400)
             );
             Board board = new Board(requestDto, user.getUsername());
             boardRepository.save(board);
             return new BoardResponseDto(board);
         // 토큰이 없는 경우 상태코드 출력
         }
-        throw new IllegalArgumentException("토큰이 유효하지 않습니다");
-
+        throw new RequestException(ErrorCode.NULL_TOKEN_400);
 
         // 토큰 검증 진행 후 이상없을 시
     }

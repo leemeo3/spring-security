@@ -27,18 +27,10 @@ public class UserController {
     public ModelAndView loginPage() {
         return new ModelAndView("login");
     }
-    // GET 값을 받는다 조회
-    // POST 값을 보낸다 등록
-    // PUT 값을 변경한다 변경
-    // DELETE 값을 삭제한다 삭제
-    // Service -> repository  entity
-    // 나머지는 dto
-    // controller dto->dto service -> repository -> entity -> DB
-    // data transfer object
 
     @ResponseBody
     @PostMapping("/signup")
-    public ResponseEntity<ResponseMsgDto> signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
+    public ResponseEntity<ResponseMsgDto> signup(@RequestBody SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
         return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"가입완료"));
     }

@@ -2,9 +2,12 @@ package com.sparta.board.controller;
 
 import com.sparta.board.dto.BoardRequestDto;
 import com.sparta.board.dto.BoardResponseDto;
+import com.sparta.board.dto.ResponseMsgDto;
 import com.sparta.board.dto.StatusResponseDto;
 import com.sparta.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,12 +20,8 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("api/boards")
-    public StatusResponseDto createBoard(@RequestBody BoardRequestDto requestDto, HttpServletRequest request) {
-        try {
-            return boardService.create(requestDto, request);
-        }catch (Exception e) {
-            return new StatusResponseDto(false,400, e.getMessage());
-        }
+    public BoardResponseDto createBoard(@RequestBody BoardRequestDto requestDto, HttpServletRequest request) {
+        return boardService.create(requestDto, request);
     }
 
     @GetMapping("/api/boards")
@@ -36,16 +35,13 @@ public class BoardController {
     }
 
     @PutMapping("api/boards/{id}")
-    public StatusResponseDto updateBoard(@PathVariable long id, @RequestBody BoardRequestDto requestDto, HttpServletRequest request) {
-        try {
-            return boardService.updateBoard(id, requestDto, request);
-        }catch (Exception e) {
-            return new StatusResponseDto(false,400, e.getMessage());
-        }
+    public BoardResponseDto updateBoard(@PathVariable long id, @RequestBody BoardRequestDto requestDto, HttpServletRequest request) {
+        return boardService.updateBoard(id, requestDto, request);
     }
 
     @DeleteMapping("api/boards/{id}")
-    public BoardResponseDto deleteBoard(@PathVariable long id, HttpServletRequest request) {
-        return boardService.deleteBoard(id, request);
+    public ResponseEntity<ResponseMsgDto> deleteBoard(@PathVariable long id, HttpServletRequest request) {
+        boardService.deleteBoard(id, request);
+        return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"삭제 성공"));
     }
 }

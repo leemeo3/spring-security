@@ -1,6 +1,5 @@
 package com.sparta.board.service;
 
-import com.sparta.board.dto.BoardResponseDto;
 import com.sparta.board.dto.CommentDto;
 import com.sparta.board.entity.Board;
 import com.sparta.board.entity.Comment;
@@ -10,9 +9,12 @@ import com.sparta.board.jwt.JwtUtil;
 import com.sparta.board.repository.BoardRepository;
 import com.sparta.board.repository.CommentRepository;
 import com.sparta.board.repository.UserRepository;
+import com.sparta.board.util.exception.ErrorCode;
+import com.sparta.board.util.exception.RequestException;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -36,11 +38,11 @@ public class CommentService {
                 // 토큰에서 사용자 정보 가져오기
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
-                throw new IllegalArgumentException("유효하지 않은 토큰입니다");
+                throw new RequestException(ErrorCode.BAD_TOKEN_400);
             }
             Optional<Board> optionalBoard = boardRepository.findById(id);
             Board board = optionalBoard.orElseThrow(
-                    () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+                    () -> new RequestException(ErrorCode.NULL_CONTENTS_400)
             );
 
             Comment comment = Comment.builder()
@@ -52,64 +54,47 @@ public class CommentService {
 
             return new CommentDto(commentRepository.save(comment));
         }
-        throw new IllegalArgumentException("토큰이 존재하지 않습니다");
+        throw new RequestException(ErrorCode.NULL_TOKEN_400);
     }
 
+    @Transactional
     public CommentDto updateComment(CommentDto commentDto, Long id, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
-        Claims claims = jwtUtil.getUserInfoFromToken(token);
+        Claims claims;
 
-        User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
-        );
-        if (user.getRole() == UserRoleEnum.ADMIN) {
-            Optional<Comment> optionalCommnet = commentRepository.findById(id);
-            Comment comment = optionalCommnet.orElseThrow(
-                    () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
-            );
-            comment.update(commentDto);
-            commentRepository.save(comment); // 트랜잭션이 없을때...
-            return new CommentDto(commentRepository.save(comment));
-        }
         if (token != null) {
             // Token 검증
             if (jwtUtil.validateToken(token)) {
                 // 토큰에서 사용자 정보 가져오기
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
-                throw new IllegalArgumentException("유효하지 않은 토큰입니다");
+                throw new RequestException(ErrorCode.BAD_TOKEN_400);
             }
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new RequestException(ErrorCode.NULL_USER_400)
+            );
+
             Optional<Comment> optionalCommnet = commentRepository.findById(id);
             Comment comment = optionalCommnet.orElseThrow(
-                    () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
+                    () -> new RequestException(ErrorCode.NULL_COMMENT_400)
             );
 
             if (comment.getCommentUsername().equals(claims.getSubject())) {
                 comment.update(commentDto);
-                commentRepository.save(comment);
                 return new CommentDto(commentRepository.save(comment));
-            } else {
-                throw new IllegalArgumentException("댓글 작성자만 수정 할 수 있습니다.");
+            } else if (user.getRole() == UserRoleEnum.ADMIN) {
+                comment.update(commentDto);
+                return new CommentDto(commentRepository.save(comment));
+            }else {
+                throw new RequestException(ErrorCode.NULL_USER_ACCESS_400);
             }
         }
-        throw new IllegalArgumentException("토큰이 존재하지 않습니다.");
+        throw new RequestException(ErrorCode.NULL_TOKEN_400);
     }
 
     public CommentDto deleteComment(Long id, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
-        Claims claims = jwtUtil.getUserInfoFromToken(token);
-
-        User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
-        );
-        if (user.getRole() == UserRoleEnum.ADMIN) {
-            Optional<Comment> optionalCommnet = commentRepository.findById(id);
-            Comment comment = optionalCommnet.orElseThrow(
-                    () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
-            );
-            commentRepository.delete(comment);
-            return new CommentDto(comment);
-        }
+        Claims claims;
 
         if (token != null) {
             // Token 검증
@@ -117,21 +102,27 @@ public class CommentService {
                 // 토큰에서 사용자 정보 가져오기
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
-                throw new IllegalArgumentException("유효하지 않은 토큰입니다");
+                throw new RequestException(ErrorCode.BAD_TOKEN_400);
             }
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new RequestException(ErrorCode.NULL_USER_400)
+            );
+
             Optional<Comment> optionalCommnet = commentRepository.findById(id);
             Comment comment = optionalCommnet.orElseThrow(
-                    () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
+                    () -> new RequestException(ErrorCode.NULL_COMMENT_400)
             );
 
             if (comment.getCommentUsername().equals(claims.getSubject())) {
                 commentRepository.delete(comment);
                 return new CommentDto(comment);
+            }else if (user.getRole() == UserRoleEnum.ADMIN) {
+                commentRepository.delete(comment);
+                return new CommentDto(comment);
             }else {
-                throw new IllegalArgumentException("댓글 작성자만 삭제 할 수 있습니다");
+                throw new RequestException(ErrorCode.NULL_USER_ACCESS_400);
             }
         }
-        throw new IllegalArgumentException("토큰이 존재하지 않습니다.");
-
+        throw new RequestException(ErrorCode.NULL_TOKEN_400);
     }
 }

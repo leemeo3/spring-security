@@ -1,5 +1,6 @@
 package com.sparta.board.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.board.dto.BoardRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,7 @@ public class Board extends Timestamped{
     @Column(nullable = false)
     private String username;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "board")
     private List<Comment> comment = new ArrayList<>();
 

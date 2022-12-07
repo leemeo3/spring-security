@@ -20,7 +20,7 @@ public class Comment extends Timestamped{
     private Long commentId;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "bId")
     private Board board;
 

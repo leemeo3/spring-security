@@ -34,7 +34,7 @@ public class Board extends Timestamped{
     private String username;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> comment = new ArrayList<>();
 
     public Board(BoardRequestDto requestDto, String username) {

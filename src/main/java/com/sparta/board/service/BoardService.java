@@ -51,6 +51,7 @@ public class BoardService {
         }
         throw new IllegalArgumentException("토큰이 유효하지 않습니다");
 
+
         // 토큰 검증 진행 후 이상없을 시
     }
 

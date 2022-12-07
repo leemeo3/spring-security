@@ -29,4 +29,9 @@ public class CommentController {
         // 응답 보내기
         return commentService.deleteComment(id, request);
     }
+
+    @GetMapping("/comment/{id}")
+    public CommentDto getComment(@PathVariable Long id) {
+        return null;
+    }
 }

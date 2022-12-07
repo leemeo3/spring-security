@@ -1,5 +1,6 @@
 package com.sparta.board.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.board.dto.CommentDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +19,9 @@ public class Comment extends Timestamped{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mId")
+    @JoinColumn(name = "bId")
     private Board board;
 
     @Column(nullable = false)

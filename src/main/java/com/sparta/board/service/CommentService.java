@@ -100,6 +100,7 @@ public class CommentService {
 
             if (comment.getCommentUsername().equals(claims.getSubject())) {
                 commentRepository.delete(comment);
+                return new CommentDto(comment);
             }else {
                 throw new IllegalArgumentException("댓글 작성자만 삭제 할 수 있습니다");
             }

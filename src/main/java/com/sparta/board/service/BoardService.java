@@ -101,7 +101,7 @@ public class BoardService {
                 // 성공했을때
                 return new BoardResponseDto(board);
             }else {
-                throw new IllegalArgumentException("작성자만 수정 할 수 있습니다");
+                throw new IllegalArgumentException("작성자만 수정 할 수 있습니다.");
             }
         // 토큰이 없는 경우 상태코드 출력
         }

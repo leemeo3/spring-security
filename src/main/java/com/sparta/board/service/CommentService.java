@@ -53,4 +53,58 @@ public class CommentService {
         }
         throw new IllegalArgumentException("토큰이 존재하지 않습니다");
     }
+
+    public CommentDto updateComment(CommentDto commentDto, Long id, HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        if (token != null) {
+            // Token 검증
+            if (jwtUtil.validateToken(token)) {
+                // 토큰에서 사용자 정보 가져오기
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("유효하지 않은 토큰입니다");
+            }
+            Optional<Comment> optionalCommnet = commentRepository.findById(id);
+            Comment comment = optionalCommnet.orElseThrow(
+                    () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
+            );
+
+            if (comment.getCommentUsername().equals(claims.getSubject())) {
+                 comment.update(commentDto);
+            } else {
+                throw new IllegalArgumentException("댓글 작성자만 수정 할 수 있습니다.");
+            }
+            return new CommentDto(commentRepository.save(comment));
+        }
+        throw new IllegalArgumentException("토큰이 존재하지 않습니다.");
+    }
+
+    public CommentDto deleteComment(Long id, HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        if (token != null) {
+            // Token 검증
+            if (jwtUtil.validateToken(token)) {
+                // 토큰에서 사용자 정보 가져오기
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("유효하지 않은 토큰입니다");
+            }
+            Optional<Comment> optionalCommnet = commentRepository.findById(id);
+            Comment comment = optionalCommnet.orElseThrow(
+                    () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
+            );
+
+            if (comment.getCommentUsername().equals(claims.getSubject())) {
+                commentRepository.delete(comment);
+            }else {
+                throw new IllegalArgumentException("댓글 작성자만 삭제 할 수 있습니다");
+            }
+        }
+        throw new IllegalArgumentException("토큰이 존재하지 않습니다.");
+
+    }
 }

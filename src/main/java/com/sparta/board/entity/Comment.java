@@ -1,5 +1,6 @@
 package com.sparta.board.entity;
 
+import com.sparta.board.dto.CommentDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,4 +27,8 @@ public class Comment extends Timestamped{
 
     @Column(nullable = false)
     private String commentUsername;
+
+    public void update(CommentDto commentDto) {
+        this.commentContents = commentDto.getCommentContents();
+    }
 }

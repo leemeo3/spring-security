@@ -2,6 +2,7 @@ package com.sparta.board.service;
 
 import com.sparta.board.dto.BoardRequestDto;
 import com.sparta.board.dto.BoardResponseDto;
+import com.sparta.board.dto.StatusResponseDto;
 import com.sparta.board.entity.Board;
 import com.sparta.board.entity.User;
 import com.sparta.board.entity.UserRoleEnum;
@@ -30,7 +31,6 @@ public class BoardService {
         // Request에서 Token 가져오기
         String token = jwtUtil.resolveToken(request);
         Claims claims;
-
 
         // 토큰이 있는 경우 토큰 검증 진행
         if (token != null) {

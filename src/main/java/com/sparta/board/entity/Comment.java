@@ -14,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Comment extends Timestamped{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
     @ManyToOne(fetch = FetchType.LAZY)

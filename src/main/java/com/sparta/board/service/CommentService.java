@@ -68,10 +68,9 @@ public class CommentService {
                     () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
             );
             comment.update(commentDto);
+            commentRepository.save(comment); // 트랜잭션이 없을때...
             return new CommentDto(commentRepository.save(comment));
         }
-
-
         if (token != null) {
             // Token 검증
             if (jwtUtil.validateToken(token)) {
@@ -87,6 +86,7 @@ public class CommentService {
 
             if (comment.getCommentUsername().equals(claims.getSubject())) {
                 comment.update(commentDto);
+                commentRepository.save(comment);
                 return new CommentDto(commentRepository.save(comment));
             } else {
                 throw new IllegalArgumentException("댓글 작성자만 수정 할 수 있습니다.");

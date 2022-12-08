@@ -45,7 +45,7 @@
 링크를 참고하세요.
 https://documenter.getpostman.com/view/23138178/2s8YzQXjFd
 ## 3. ERD
-![스크린샷 2022-12-01 오후 11 16 57](https://user-images.githubusercontent.com/117142323/205075830-3bae6045-7b9c-4585-88cf-21dc741ca8e8.png)
+![스크린샷 2022-12-08 오전 1 24 15](https://user-images.githubusercontent.com/117142323/206387324-6b75364b-6bdd-4698-ae42-f1ddd7878b5e.png)
 ## 4. 사용한 기술 및 툴
 * Java
 * SpringBoot

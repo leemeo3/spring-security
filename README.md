@@ -1,5 +1,4 @@
 # Spring - jwt Signup/Login + CRUD(Comment)
-#### ~~Springboot를 사용해 최소한의 백엔드의 CRUD만을 구현한 프로젝트~~
 #### Springboot를 사용해 최소한의 백엔드의 CRUD에서 jwt 로그인과 댓글 부분을 추가해 구현한 프로젝트
 
 ## 1. 요구 사항

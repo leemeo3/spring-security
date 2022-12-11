@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
@@ -24,9 +26,20 @@ public class UserController {
     }
 
     // 로그인
+    @ResponseBody
     @PostMapping("/login")
     public ResponseEntity<ResponseMsgDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         userService.login(loginRequestDto, response);
         return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"로그인 성공"));
+    }
+
+    @GetMapping("/signup")
+    public ModelAndView signupPage() {
+        return new ModelAndView("signup");
+    }
+
+    @GetMapping("/login-page")
+    public ModelAndView loginPage() {
+        return new ModelAndView("login");
     }
 }

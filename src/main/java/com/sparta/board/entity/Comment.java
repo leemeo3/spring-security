@@ -21,7 +21,7 @@ public class Comment extends Timestamped{
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "bId")
+    @JoinColumn(name = "boardCommentId")
     private Board board;
 
     @Column(nullable = false)
@@ -29,6 +29,7 @@ public class Comment extends Timestamped{
 
     @Column(nullable = false)
     private String commentUsername;
+
 
     public void update(CommentDto commentDto) {
         this.commentContents = commentDto.getCommentContents();

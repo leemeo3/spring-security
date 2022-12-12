@@ -33,6 +33,9 @@ public class Board extends Timestamped{
     @Column(nullable = false)
     private String username;
 
+//    @Column(nullable = false)
+//    private int likesNum;
+
     @JsonIgnore
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> comment = new ArrayList<>();

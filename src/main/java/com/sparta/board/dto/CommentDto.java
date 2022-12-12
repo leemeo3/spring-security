@@ -17,8 +17,7 @@ public class CommentDto {
     private String commentUsername;
     private String commentContents;
 
-    public CommentDto(Comment comment){
-
+    public CommentDto(Comment comment) {
         this.commentId = comment.getCommentId();
         this.mId = comment.getBoard().getId();
         this.commentUsername = comment.getCommentUsername();

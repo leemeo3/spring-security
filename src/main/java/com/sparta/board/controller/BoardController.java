@@ -53,10 +53,5 @@ public class BoardController {
         return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"삭제 성공"));
     }
 
-//    // 게시글 좋아요
-//    @PostMapping("api/boards/{id}")
-//    public ResponseEntity<ResponseMsgDto> LikeBoard(@PathVariable long id, HttpServletRequest request) {
-//        boardService.LikeBoard(id, request);
-//        return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"게시글 좋아요 성공"));
-//    }
+
 }

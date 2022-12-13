@@ -16,15 +16,17 @@ public class BoardLike {
     private Long id;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "boardLikeId")
     private Board board;
 
-    @Column(nullable = false)
-    private String username;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "userId", referencedColumnName = "username")
+    private User user;
 
-//    public BoardLike(Long id, String username) {
-//        this.id = id;
-//        this.username = username;
-//    }
+    public BoardLike(Board board, User user) {
+        this.board = board;
+        this.user = user;
+    }
 }

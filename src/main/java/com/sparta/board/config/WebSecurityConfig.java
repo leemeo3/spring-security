@@ -1,6 +1,5 @@
 package com.sparta.board.config;
 
-
 import com.sparta.board.jwt.JwtAuthFilter;
 import com.sparta.board.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,6 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         // h2-console 사용 및 resources 접근 허용 설정
@@ -54,8 +52,7 @@ public class WebSecurityConfig {
                 // JWT 인증/인가를 사용하기 위한 설정
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
-
-//        http.formLogin().loginPage("/api/user/login-page").permitAll();                 // 리소스의 접근을 인증절차 없이 허
+//      http.formLogin().loginPage("/api/user/login-page").permitAll();                 // 리소스의 접근을 인증절차 없이 허용
 
         http.exceptionHandling().accessDeniedPage("/api/user/forbidden");
 

@@ -2,10 +2,7 @@ package com.sparta.board.service;
 
 import com.sparta.board.dto.BoardRequestDto;
 import com.sparta.board.dto.BoardResponseDto;
-import com.sparta.board.entity.Board;
-import com.sparta.board.entity.BoardLike;
-import com.sparta.board.entity.User;
-import com.sparta.board.entity.UserRoleEnum;
+import com.sparta.board.entity.*;
 import com.sparta.board.jwt.JwtUtil;
 import com.sparta.board.repository.BoardLikeRepository;
 import com.sparta.board.repository.BoardRepository;
@@ -17,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,18 +24,13 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
     private final BoardLikeRepository boardLikeRepository;
 
     @Transactional
     public BoardResponseDto create(BoardRequestDto requestDto, User user) {
-
-            user = userRepository.findByUsername(user.getUsername()).orElseThrow(
-                    () -> new RequestException(ErrorCode.NULL_USER_400)
-            );
-            Board board = new Board(requestDto, user.getUsername());
-            boardRepository.save(board);
-            return new BoardResponseDto(board);
+        Board board = new Board(requestDto, user.getUsername());
+        boardRepository.save(board);
+        return new BoardResponseDto(board);
     }
 
     public List<BoardResponseDto> getBoard() {
@@ -55,9 +47,6 @@ public class BoardService {
 
     @Transactional
     public BoardResponseDto updateBoard(long id, BoardRequestDto requestDto, User user) {
-        user = userRepository.findByUsername(user.getUsername()).orElseThrow(
-                () -> new RequestException(ErrorCode.NULL_USER_400)
-        );
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new RequestException(ErrorCode.NULL_CONTENTS_400)
         );
@@ -73,10 +62,6 @@ public class BoardService {
     }
 
     public BoardResponseDto deleteBoard(long id, User user) {
-        user = userRepository.findByUsername(user.getUsername()).orElseThrow(
-                () -> new RequestException(ErrorCode.NULL_USER_400)
-        );
-
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new RequestException(ErrorCode.NULL_CONTENTS_400)
         );
@@ -92,37 +77,31 @@ public class BoardService {
         }
     }
 
+    public void LikeBoard(long id, User user) {
+        Board board = boardRepository.findById(id).orElseThrow(
+                () -> new RequestException(ErrorCode.NULL_CONTENTS_400)
+        );
 
-//
-//    public BoardResponseDto LikeBoard(long id, HttpServletRequest request) {
-//        String token = jwtUtil.resolveToken(request);
-//        Claims claims;
-//
-//        if (token != null) {
-//            // Token 검증
-//            if (jwtUtil.validateToken(token)) {
-//                // 토큰에서 사용자 정보 가져오기
-//                claims = jwtUtil.getUserInfoFromToken(token);
-//            } else {
-//                throw new RequestException(ErrorCode.BAD_TOKEN_400);
-//            }
-//
-//            Board board = boardRepository.findById(id).orElseThrow(
-//                    () -> new RequestException(ErrorCode.NULL_CONTENTS_400)
-//            );
-//            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-//                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
-//            );
-//            Optional<BoardLike> optionalBoardLike = boardLikeRepository.findByBoardAndUser(board, user);
-//
-//            if (optionalBoardLike.isEmpty()) {
-//                BoardLike boardLike = new BoardLike(id, claims.getSubject());
-//                boardLikeRepository.save(boardLike);
-//            } else {
-//                System.out.println("테스트");
-//            }
+        Optional<BoardLike> optionalBoardLike = boardLikeRepository.findByBoardAndUser(board, user);
+
+        if (!optionalBoardLike.isPresent()) {
+            BoardLike boardLike = new BoardLike(board, user);
+            board.boardLike(1);
+            boardLikeRepository.save(boardLike);
+        }
+    }
+
+    public void deleteLikeBoard(long id, User user) {
+        Board board = boardRepository.findById(id).orElseThrow(
+                () -> new RequestException(ErrorCode.NULL_CONTENTS_400)
+        );
+
+        Optional<BoardLike> optionalBoardLike = boardLikeRepository.findByBoardAndUser(board, user);
+
+//        if (optionalBoardLike.isPresent()) {
+            BoardLike boardLike = new BoardLike(board, user);
+            board.boardLike(-1);
+            boardLikeRepository.delete(boardLike);
 //        }
-//        // 토큰이 없는 경우 상태코드 출력
-//        throw new RequestException(ErrorCode.NULL_TOKEN_400);
-//    }
+    }
 }

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface BoardLikeRepository extends JpaRepository<BoardLike, Long> {
-//    Optional<BoardLike> findByBoard(Board board);
-//
-//    Optional<BoardLike> findByBoardAndUser(Board board, User user);
+    Optional<BoardLike> findByBoardAndUser(Board board, User user);
+//    Optional<BoardLike> findByBoardAndUsername(Board board, User user);
+    Optional<BoardLike> deleteBoardLikeByBoardAndUser(Board board, User user);
 }

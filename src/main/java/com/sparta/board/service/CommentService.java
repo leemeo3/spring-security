@@ -1,12 +1,10 @@
 package com.sparta.board.service;
 
 import com.sparta.board.dto.CommentDto;
-import com.sparta.board.entity.Board;
-import com.sparta.board.entity.Comment;
-import com.sparta.board.entity.User;
-import com.sparta.board.entity.UserRoleEnum;
+import com.sparta.board.entity.*;
 import com.sparta.board.jwt.JwtUtil;
 import com.sparta.board.repository.BoardRepository;
+import com.sparta.board.repository.CommentLikeRepository;
 import com.sparta.board.repository.CommentRepository;
 import com.sparta.board.repository.UserRepository;
 import com.sparta.board.util.exception.ErrorCode;
@@ -26,7 +24,7 @@ public class CommentService {
 
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
+    private final CommentLikeRepository commentLikeRepository;
 
     public CommentDto addComment(CommentDto commentDto, Long id, User user) {
         Optional<Board> optionalBoard = boardRepository.findById(id);
@@ -45,10 +43,6 @@ public class CommentService {
 
     @Transactional
     public CommentDto updateComment(Long id, CommentDto commentDto, User user) {
-        user = userRepository.findByUsername(user.getUsername()).orElseThrow(
-                () -> new RequestException(ErrorCode.NULL_USER_400)
-        );
-
         Optional<Comment> optionalCommnet = commentRepository.findById(id);
         Comment comment = optionalCommnet.orElseThrow(
                 () -> new RequestException(ErrorCode.NULL_COMMENT_400)
@@ -66,10 +60,6 @@ public class CommentService {
     }
 
     public CommentDto deleteComment(Long id, User user) {
-        user = userRepository.findByUsername(user.getUsername()).orElseThrow(
-                () -> new RequestException(ErrorCode.NULL_USER_400)
-        );
-
         Optional<Comment> optionalCommnet = commentRepository.findById(id);
         Comment comment = optionalCommnet.orElseThrow(
                 () -> new RequestException(ErrorCode.NULL_COMMENT_400)
@@ -84,5 +74,35 @@ public class CommentService {
         } else {
             throw new RequestException(ErrorCode.NULL_USER_ACCESS_400);
         }
+    }
+
+    public void LikeComment(long id, User user) {
+        Optional<Comment> optionalCommnet = commentRepository.findById(id);
+        Comment comment = optionalCommnet.orElseThrow(
+                () -> new RequestException(ErrorCode.NULL_COMMENT_400)
+        );
+
+        Optional<CommentLike> optionalCommentLike = commentLikeRepository.findByCommentAndUser(comment, user);
+
+        if (!optionalCommentLike.isPresent()) {
+            CommentLike commentLike = new CommentLike(comment, user);
+            comment.commentLike(1);
+            commentLikeRepository.save(commentLike);
+        }
+    }
+
+    public void deleteLikeComment(long id, User user) {
+        Optional<Comment> optionalCommnet = commentRepository.findById(id);
+        Comment comment = optionalCommnet.orElseThrow(
+                () -> new RequestException(ErrorCode.NULL_COMMENT_400)
+        );
+
+        Optional<CommentLike> optionalCommentLike = commentLikeRepository.findByCommentAndUser(comment, user);
+
+//        if (optionalBoardLike.isPresent()) {
+        CommentLike commentLike = new CommentLike(comment, user);
+        comment.commentLike(-1);
+        commentLikeRepository.delete(commentLike);
+//        }
     }
 }

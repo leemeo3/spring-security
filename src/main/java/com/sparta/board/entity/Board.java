@@ -33,12 +33,16 @@ public class Board extends Timestamped{
     @Column(nullable = false)
     private String username;
 
-//    @Column(nullable = false)
-//    private int likesNum;
+    @Column(nullable = false)
+    private int likesNum;
 
     @JsonIgnore
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> comment = new ArrayList<>();
+
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+//    private List<BoardLike> boardLikes = new ArrayList<>();
 
     public Board(BoardRequestDto requestDto, String username) {
         this.title = requestDto.getTitle();
@@ -52,5 +56,9 @@ public class Board extends Timestamped{
         this.title = requestDto.getTitle();
         this.name = requestDto.getName();
         this.contents = requestDto.getContents();
+    }
+
+    public void boardLike(int cnt) {
+        this.likesNum = likesNum + cnt;
     }
 }

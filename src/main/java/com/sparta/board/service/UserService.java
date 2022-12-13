@@ -30,7 +30,6 @@ public class UserService {
     @Transactional
     public void signup(SignupRequestDto signupRequestDto) {
         String username = signupRequestDto.getUsername();
-//        String password = signupRequestDto.getPassword();
         String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
         // 회원 중복 확인
@@ -65,8 +64,6 @@ public class UserService {
 
         // 비밀번호 확인
         if(!passwordEncoder.matches(password, user.getPassword())) {
-            System.out.println("password = " + password);
-            System.out.println("user.getPassword() = " + user.getPassword());
             throw new RequestException(ErrorCode.PASSWORD_NOT_400);
         }
 

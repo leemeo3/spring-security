@@ -2,12 +2,11 @@ package com.sparta.board.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.board.dto.CommentDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -20,9 +19,17 @@ public class Comment extends Timestamped{
     private Long commentId;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "boardCommentId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "boardId")
     private Board board;
+
+    // comment가 지워지면 commentLike가 전부 지워진다
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<CommentLike> commentLikes = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_Id")
+    private User user;
 
     @Column(nullable = false)
     private String commentContents;
@@ -32,7 +39,6 @@ public class Comment extends Timestamped{
 
     @Column(nullable = false)
     private int likesNum;
-
 
     public void update(CommentDto commentDto) {
         this.commentContents = commentDto.getCommentContents();

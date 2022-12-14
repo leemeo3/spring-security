@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -52,6 +51,4 @@ public class BoardController {
         boardService.deleteBoard(id, userDetails.getUser());
         return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"삭제 성공"));
     }
-
-
 }

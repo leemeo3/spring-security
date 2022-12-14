@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class UserController {
     // 회원가입
     @ResponseBody
     @PostMapping("/signup")
-    public ResponseEntity<ResponseMsgDto> signup(@RequestBody SignupRequestDto signupRequestDto) {
+    public ResponseEntity<ResponseMsgDto> signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
         return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"가입완료"));
     }
@@ -31,15 +32,5 @@ public class UserController {
     public ResponseEntity<ResponseMsgDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         userService.login(loginRequestDto, response);
         return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"로그인 성공"));
-    }
-
-    @GetMapping("/signup")
-    public ModelAndView signupPage() {
-        return new ModelAndView("signup");
-    }
-
-    @GetMapping("/login-page")
-    public ModelAndView loginPage() {
-        return new ModelAndView("login");
     }
 }

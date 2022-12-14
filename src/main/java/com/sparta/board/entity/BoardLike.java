@@ -5,22 +5,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Getter
 @Entity
 @NoArgsConstructor
 @Table(name = "BoardLike")
-public class BoardLike {
+public class BoardLike implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "boardLikeId")
     private Board board;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "username")
     private User user;

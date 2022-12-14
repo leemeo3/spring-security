@@ -1,7 +1,6 @@
 package com.sparta.board.service;
 
-import com.sparta.board.dto.BoardRequestDto;
-import com.sparta.board.dto.BoardResponseDto;
+import com.sparta.board.dto.*;
 import com.sparta.board.entity.*;
 import com.sparta.board.jwt.JwtUtil;
 import com.sparta.board.repository.BoardLikeRepository;
@@ -26,7 +25,6 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardLikeRepository boardLikeRepository;
 
-    @Transactional
     public BoardResponseDto create(BoardRequestDto requestDto, User user) {
         Board board = new Board(requestDto, user.getUsername());
         boardRepository.save(board);
@@ -37,6 +35,7 @@ public class BoardService {
         List<Board> list = boardRepository.findAllByOrderByModifiedAtDesc();
         return list.stream().map(board -> new BoardResponseDto(board)).collect(Collectors.toList());
     }
+
 
     public BoardResponseDto getBoard(Long id) {
         Board board = boardRepository.findById(id).orElseThrow(
@@ -88,6 +87,8 @@ public class BoardService {
             BoardLike boardLike = new BoardLike(board, user);
             board.boardLike(1);
             boardLikeRepository.save(boardLike);
+        } else {
+            throw new RequestException(ErrorCode.NULL_CONTENTS_400);
         }
     }
 
@@ -98,10 +99,13 @@ public class BoardService {
 
         Optional<BoardLike> optionalBoardLike = boardLikeRepository.findByBoardAndUser(board, user);
 
-//        if (optionalBoardLike.isPresent()) {
-            BoardLike boardLike = new BoardLike(board, user);
+        if (optionalBoardLike.isPresent()) {
+//            BoardLike boardLike = new BoardLike(board, user);
             board.boardLike(-1);
-            boardLikeRepository.delete(boardLike);
-//        }
+            boardLikeRepository.deleteByBoardAndUser(board, user);
+//            boardLikeRepository.delete(boardLike);
+        }else {
+            throw new RequestException(ErrorCode.NULL_CONTENTS_400);
+        }
     }
 }

@@ -40,7 +40,7 @@ public class LikeController {
     public ResponseEntity<ResponseMsgDto> LikeComment(@PathVariable long id,
                                                     @AuthenticationPrincipal UserDetailsImpl userDetails) {
         commentService.LikeComment(id, userDetails.getUser());
-        return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"게시글 좋아요 성공"));
+        return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"댓글 좋아요 성공"));
     }
 
     // 댓글 좋아요 취소
@@ -48,6 +48,6 @@ public class LikeController {
     public ResponseEntity<ResponseMsgDto> deleteLikeComment(@PathVariable long id,
                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
         commentService.deleteLikeComment(id, userDetails.getUser());
-        return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"게시글 좋아요 삭제"));
+        return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"댓글 좋아요 삭제"));
     }
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Table(name = "BOARD")
-public class Board extends Timestamped{
+public class Board extends Timestamped implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,13 +37,17 @@ public class Board extends Timestamped{
     @Column(nullable = false)
     private int likesNum;
 
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
+
     @JsonIgnore
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> comment = new ArrayList<>();
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-//    private List<BoardLike> boardLikes = new ArrayList<>();
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<BoardLike> boardLikes = new ArrayList<>();
+
 
     public Board(BoardRequestDto requestDto, String username) {
         this.title = requestDto.getTitle();
@@ -50,6 +55,7 @@ public class Board extends Timestamped{
         this.contents = requestDto.getContents();
         this.password = requestDto.getPassword();
         this.username = username;
+        this.likesNum = getLikesNum();
     }
 
     public void update(BoardRequestDto requestDto) {

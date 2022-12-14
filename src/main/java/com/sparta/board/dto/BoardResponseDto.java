@@ -4,6 +4,7 @@ import com.sparta.board.entity.Board;
 import com.sparta.board.entity.Comment;
 import lombok.Getter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -14,7 +15,7 @@ public class BoardResponseDto {
     private String contents;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     public BoardResponseDto(Board board) {
         this.id = board.getId();
@@ -24,5 +25,15 @@ public class BoardResponseDto {
         this.createdAt  = board.getCreatedAt();
         this.modifiedAt = board.getModifiedAt();
         this.comments = board.getComment();
+    }
+
+    public BoardResponseDto(Board board, List<Comment> comments) {
+        this.id = board.getId();
+        this.title = board.getTitle();
+        this.name = board.getName();
+        this.contents = board.getContents();
+        this.createdAt  = board.getCreatedAt();
+        this.modifiedAt = board.getModifiedAt();
+        this.comments = comments;
     }
 }

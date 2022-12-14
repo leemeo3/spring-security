@@ -43,8 +43,7 @@ public class CommentService {
 
     @Transactional
     public CommentDto updateComment(Long id, CommentDto commentDto, User user) {
-        Optional<Comment> optionalCommnet = commentRepository.findById(id);
-        Comment comment = optionalCommnet.orElseThrow(
+        Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new RequestException(ErrorCode.NULL_COMMENT_400)
         );
 
@@ -60,8 +59,7 @@ public class CommentService {
     }
 
     public CommentDto deleteComment(Long id, User user) {
-        Optional<Comment> optionalCommnet = commentRepository.findById(id);
-        Comment comment = optionalCommnet.orElseThrow(
+        Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new RequestException(ErrorCode.NULL_COMMENT_400)
         );
 
@@ -77,8 +75,7 @@ public class CommentService {
     }
 
     public void LikeComment(long id, User user) {
-        Optional<Comment> optionalCommnet = commentRepository.findById(id);
-        Comment comment = optionalCommnet.orElseThrow(
+        Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new RequestException(ErrorCode.NULL_COMMENT_400)
         );
 
@@ -88,21 +85,26 @@ public class CommentService {
             CommentLike commentLike = new CommentLike(comment, user);
             comment.commentLike(1);
             commentLikeRepository.save(commentLike);
+        } else {
+            throw new RequestException(ErrorCode.NULL_COMMENT_400);
         }
     }
 
     public void deleteLikeComment(long id, User user) {
-        Optional<Comment> optionalCommnet = commentRepository.findById(id);
-        Comment comment = optionalCommnet.orElseThrow(
+//        Optional<Comment> optionalCommnet = commentRepository.findById(id);
+        Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new RequestException(ErrorCode.NULL_COMMENT_400)
         );
 
         Optional<CommentLike> optionalCommentLike = commentLikeRepository.findByCommentAndUser(comment, user);
 
-//        if (optionalBoardLike.isPresent()) {
-        CommentLike commentLike = new CommentLike(comment, user);
+        if (optionalCommentLike.isPresent()) {
+//        CommentLike commentLike = new CommentLike(comment, user);
         comment.commentLike(-1);
-        commentLikeRepository.delete(commentLike);
-//        }
+        commentLikeRepository.deleteByCommentAndUser(comment, user);
+//            commentLikeRepository.delete(commentLike);
+        } else {
+            throw new RequestException(ErrorCode.NULL_COMMENT_400);
+        }
     }
 }

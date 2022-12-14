@@ -24,7 +24,7 @@ public class CommentLike implements Serializable {
     private User user;
 
     public CommentLike(Comment comment, User user) {
-        this.comment = comment;
-        this.user = user;
+        this.comment    = comment;
+        this.user       = user;
     }
 }

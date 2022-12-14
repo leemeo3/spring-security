@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> {
     Optional<CommentLike> findByCommentAndUser(Comment comment, User user);
-    //    Optional<CommentLike> findByCommentAndUsername(Comment comment, User user);
-//    Optional<CommentLike> deleteCommentLikeByAndUser(Comment comment, User user);
 
     @Transactional
     void deleteByCommentAndUser(Comment comment, User user);

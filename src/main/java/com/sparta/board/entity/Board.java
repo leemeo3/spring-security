@@ -43,25 +43,29 @@ public class Board extends Timestamped implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    // board가 지워질시 comment가 지워진다
     private List<Comment> comment = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    // board가 지워질시 boardLike가 지워진다
     private List<BoardLike> boardLikes = new ArrayList<>();
 
 
     public Board(BoardRequestDto requestDto, String username) {
-        this.title = requestDto.getTitle();
-        this.name = requestDto.getName();
-        this.contents = requestDto.getContents();
-        this.password = requestDto.getPassword();
-        this.username = username;
-        this.likesNum = getLikesNum();
+        // Dto -> Entity
+        this.title      = requestDto.getTitle();        // 제목
+        this.name       = requestDto.getName();         // 아이디
+        this.contents   = requestDto.getContents();     // 내용
+        this.password   = requestDto.getPassword();     // 비밀번호
+        this.username   = username;                     // 유저아이디
+        this.likesNum   = getLikesNum();                // 좋아요 갯수
     }
 
     public void update(BoardRequestDto requestDto) {
-        this.title = requestDto.getTitle();
-        this.name = requestDto.getName();
-        this.contents = requestDto.getContents();
+        // Dto -> Entity
+        this.title      = requestDto.getTitle();        // 제목
+        this.name       = requestDto.getName();         // 아이디
+        this.contents   = requestDto.getContents();     // 내용
     }
 
     public void boardLike(int cnt) {

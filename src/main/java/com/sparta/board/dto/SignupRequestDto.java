@@ -23,6 +23,6 @@ public class SignupRequestDto {
     @Pattern(regexp = "[a-zA-Z0-9`~!@#$%^&*()_=+|{};:,.<>/?]*$", message = "비밀번호 형식이 일치하지 않습니다")
     private String password;
 
-    private boolean admin = false;
-    private String adminToken = "";
+    private boolean admin       = false;
+    private String adminToken   = "";
 }

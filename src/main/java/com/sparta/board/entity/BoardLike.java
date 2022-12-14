@@ -25,7 +25,7 @@ public class BoardLike implements Serializable {
     private User user;
 
     public BoardLike(Board board, User user) {
-        this.board = board;
-        this.user = user;
+        this.board      = board;
+        this.user       = user;
     }
 }

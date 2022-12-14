@@ -9,8 +9,8 @@ public class StatusResponseDto {
     private String msg;
 
     public StatusResponseDto(Boolean success, int statusCode, String msg) {
-        this.success = success;
-        this.statusCode = statusCode;
-        this.msg = msg;
+        this.success        = success;
+        this.statusCode     = statusCode;
+        this.msg            = msg;
     }
 }

@@ -21,16 +21,17 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
+    // 의존성 주입
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
     private final PasswordEncoder passwordEncoder;
 
+    // 회원가입
     @Transactional
     public void signup(SignupRequestDto signupRequestDto) {
-        String username = signupRequestDto.getUsername();
-        String password = passwordEncoder.encode(signupRequestDto.getPassword());
+        String username = signupRequestDto.getUsername();                           // Dto -> entity
+        String password = passwordEncoder.encode(signupRequestDto.getPassword());   // Dto -> entity
 
         // 회원 중복 확인
         Optional<User> found = userRepository.findByUsername(username);

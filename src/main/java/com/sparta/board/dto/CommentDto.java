@@ -11,16 +11,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentDto {
-
-    private Long commentId;
-    private Long mId;
-    private String commentUsername;
-    private String commentContents;
+    // 댓글 응답 DTO
+    private Long    commentId;          // ID
+    private Long    mId;                // Board ID
+    private String  commentUsername;    // 댓글유저아이디
+    private String  commentContents;    // 댓글내용
 
     public CommentDto(Comment comment) {
-        this.commentId = comment.getCommentId();
-        this.mId = comment.getBoard().getId();
-        this.commentUsername = comment.getCommentUsername();
-        this.commentContents = comment.getCommentContents();
+        // entity -> Dto
+        this.commentId       = comment.getCommentId();          // ID
+        this.mId             = comment.getBoard().getId();      // Board ID
+        this.commentUsername = comment.getCommentUsername();    // 댓글유저아이디
+        this.commentContents = comment.getCommentContents();    // 댓글내용
     }
 }

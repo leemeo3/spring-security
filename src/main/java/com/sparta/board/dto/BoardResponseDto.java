@@ -9,31 +9,37 @@ import java.util.List;
 
 @Getter
 public class BoardResponseDto {
-    private Long id;
-    private String title;
-    private String name;
-    private String contents;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
-    private List<Comment> comments = new ArrayList<>();
+    //응답 DTO
+
+    private Long            id;             // ID
+    private String          title;          // 제목
+    private String          name;           // 아이디
+    private String          contents;       // 내용
+    private LocalDateTime   createdAt;      // 생성시간
+    private LocalDateTime   modifiedAt;     // 변경시간
+    private List<Comment>   comments = new ArrayList<>();   // 게시글의 댓글
 
     public BoardResponseDto(Board board) {
-        this.id = board.getId();
-        this.title = board.getTitle();
-        this.name = board.getName();
-        this.contents = board.getContents();
-        this.createdAt  = board.getCreatedAt();
-        this.modifiedAt = board.getModifiedAt();
-        this.comments = board.getComment();
+        // 게시글 응답 DTO
+        // entity -> DTO
+        this.id         = board.getId();        // ID
+        this.title      = board.getTitle();     // 제목
+        this.name       = board.getName();      // 아이디
+        this.contents   = board.getContents();  // 내용
+        this.createdAt  = board.getCreatedAt(); // 작성시간
+        this.modifiedAt = board.getModifiedAt();// 변경시간
+        this.comments   = board.getComment();   // 댓글
     }
 
     public BoardResponseDto(Board board, List<Comment> comments) {
-        this.id = board.getId();
-        this.title = board.getTitle();
-        this.name = board.getName();
-        this.contents = board.getContents();
-        this.createdAt  = board.getCreatedAt();
-        this.modifiedAt = board.getModifiedAt();
-        this.comments = comments;
+        // 게시글 응답 댓글 추가시 DTO
+        // entity -> DTO
+        this.id         = board.getId();        // ID
+        this.title      = board.getTitle();     // 제목
+        this.name       = board.getName();      // 아이디
+        this.contents   = board.getContents();  // 내용
+        this.createdAt  = board.getCreatedAt(); // 생성시간
+        this.modifiedAt = board.getModifiedAt();// 변경시간
+        this.comments   = comments;             // 댓글
     }
 }

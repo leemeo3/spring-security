@@ -46,8 +46,8 @@ public class User implements Serializable {
     private List<Comment> commentList = new ArrayList<>();
 
     public User(String username, String password, UserRoleEnum role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
+        this.username   = username;
+        this.password   = password;
+        this.role       = role;
     }
 }

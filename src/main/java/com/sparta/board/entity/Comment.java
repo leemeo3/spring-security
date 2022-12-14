@@ -23,8 +23,8 @@ public class Comment extends Timestamped{
     @JoinColumn(name = "boardId")
     private Board board;
 
-    // comment가 지워지면 commentLike가 전부 지워진다
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    // comment가 지워질시 commentLike가 전부 지워진다.
     private List<CommentLike> commentLikes = new ArrayList<>();
 
     @ManyToOne

@@ -39,6 +39,16 @@ public class Comment extends Timestamped{
     @Column(nullable = false)
     private int likesNum;
 
+    public Comment(CommentDto commentDto, Board board, User user) {
+        this.commentId          = commentDto.getCommentId();
+        this.commentContents    = commentDto.getCommentContents();
+        this.commentUsername    = user.getUsername();
+        this.board              = board;
+        this.user               = user;
+        this.commentLikes       = getCommentLikes();
+        this.likesNum           = getLikesNum();
+    }
+
     public void update(CommentDto commentDto) {
         this.commentContents = commentDto.getCommentContents();
     }

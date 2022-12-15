@@ -32,14 +32,16 @@ public class CommentService {
         Board board = boardRepository.findById(id).orElseThrow(             // 댓글을 추가할 게시글을 찾는다.
                 () -> new RequestException(ErrorCode.NULL_CONTENTS_400)
         );
-        Comment comment = Comment.builder()                                 // comment entity에 빌더적용
-                .commentId(commentDto.getCommentId())                       // id 테이블
-                .board(board)                                               // Board ID
-                .commentUsername(user.getUsername())                        // 유저아이디
-                .commentContents(commentDto.getCommentContents())           // 댓글 내용
-                .build();
+//        Comment comment = Comment.builder()                                 // comment entity에 빌더 적용
+//                .commentId(commentDto.getCommentId())                       // id 테이블
+//                .board(board)                                               // Board ID
+//                .user(user)
+//                .commentUsername(user.getUsername())                        // 유저아이디
+//                .commentContents(commentDto.getCommentContents())           // 댓글 내용
+//                .build();
 
-        return new CommentDto(commentRepository.save(comment));             // comment entity의 내용을 저장
+        Comment comment = commentRepository.save(new Comment(commentDto, board, user));
+        return new CommentDto(comment);
     }
 
     // 댓글 수정

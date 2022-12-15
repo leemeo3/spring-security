@@ -1,6 +1,7 @@
 package com.sparta.board.service;
 
 import com.sparta.board.dto.CommentDto;
+import com.sparta.board.dto.CommentRequestDto;
 import com.sparta.board.entity.*;
 import com.sparta.board.jwt.JwtUtil;
 import com.sparta.board.repository.BoardRepository;
@@ -89,7 +90,7 @@ public class CommentService {
             comment.commentLike(1);                                    // 좋아요 갯수 1 추가
             commentLikeRepository.save(commentLike);                        // 저장 진행
         } else {
-            throw new RequestException(ErrorCode.NULL_COMMENT_400);         // 아닐 경우 Error 반환
+            throw new RequestException(ErrorCode.NULL_LIKE_400);         // 아닐 경우 Error 반환
         }
     }
 
@@ -105,7 +106,7 @@ public class CommentService {
         comment.commentLike(-1);                                       // 좋아요 갯수 1 빼기
         commentLikeRepository.deleteByCommentAndUser(comment, user);        // JPA를 통해 게시글과 user 정보 일치한 데이터 삭제
         } else {
-            throw new RequestException(ErrorCode.NULL_COMMENT_400);         // 아닐 경우 Error 반환
+            throw new RequestException(ErrorCode.NULL_LIKE_400);         // 아닐 경우 Error 반환
         }
     }
 }

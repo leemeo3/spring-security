@@ -18,13 +18,12 @@ public class Comment extends Timestamped{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "boardId")
     private Board board;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
-    // comment가 지워질시 commentLike가 전부 지워진다.
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL) // comment가 지워질시 commentLike가 전부 지워진다.
+    @OrderBy("id desc")
     private List<CommentLike> commentLikes = new ArrayList<>();
 
     @ManyToOne

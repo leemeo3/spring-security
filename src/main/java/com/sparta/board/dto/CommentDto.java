@@ -16,6 +16,7 @@ public class CommentDto {
     private Long    mId;                // Board ID
     private String  commentUsername;    // 댓글유저아이디
     private String  commentContents;    // 댓글내용
+    private int     likeCnt;            // 좋아요
 
     public CommentDto(Comment comment) {
         // entity -> Dto
@@ -23,5 +24,6 @@ public class CommentDto {
         this.mId             = comment.getBoard().getId();      // Board ID
         this.commentUsername = comment.getCommentUsername();    // 댓글유저아이디
         this.commentContents = comment.getCommentContents();    // 댓글내용
+        this.likeCnt         = comment.getLikesNum();
     }
 }

@@ -17,7 +17,7 @@ public class BoardResponseDto {
     private String          contents;       // 내용
     private LocalDateTime   createdAt;      // 생성시간
     private LocalDateTime   modifiedAt;     // 변경시간
-    private List<Comment>   comments = new ArrayList<>();   // 게시글의 댓글
+    private List<Comment> comments = new ArrayList<>();   // 게시글의 댓글
 
     public BoardResponseDto(Board board) {
         // 게시글 응답 DTO
@@ -31,15 +31,4 @@ public class BoardResponseDto {
         this.comments   = board.getComment();   // 댓글
     }
 
-    public BoardResponseDto(Board board, List<Comment> comments) {
-        // 게시글 응답 댓글 추가시 DTO
-        // entity -> DTO
-        this.id         = board.getId();        // ID
-        this.title      = board.getTitle();     // 제목
-        this.name       = board.getName();      // 아이디
-        this.contents   = board.getContents();  // 내용
-        this.createdAt  = board.getCreatedAt(); // 생성시간
-        this.modifiedAt = board.getModifiedAt();// 변경시간
-        this.comments   = comments;             // 댓글
-    }
 }

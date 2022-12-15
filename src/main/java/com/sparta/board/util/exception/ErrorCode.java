@@ -31,6 +31,7 @@ public enum ErrorCode {
     //Repo Error
     NULL_CONTENTS_400(              HttpStatus.BAD_REQUEST, "게시글이 없습니다."),
     NULL_COMMENT_400(               HttpStatus.BAD_REQUEST, "댓글이 없습니다"),
+    NULL_LIKE_400(               HttpStatus.BAD_REQUEST, "이미 좋아요 처리가 되었습니다."),
     //접근 Error
     COMMON_BAD_REQUEST_400(         HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
     NULL_USER_ACCESS_400(           HttpStatus.BAD_REQUEST, "작성자 권한이 없습니다");

@@ -2,7 +2,6 @@ package com.sparta.board.service;
 
 import com.sparta.board.dto.LoginRequestDto;
 import com.sparta.board.dto.SignupRequestDto;
-import com.sparta.board.entity.Board;
 import com.sparta.board.entity.User;
 import com.sparta.board.entity.UserRoleEnum;
 import com.sparta.board.jwt.JwtUtil;
@@ -10,7 +9,6 @@ import com.sparta.board.repository.UserRepository;
 import com.sparta.board.util.exception.ErrorCode;
 import com.sparta.board.util.exception.RequestException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +32,8 @@ public class UserService {
         String password = passwordEncoder.encode(signupRequestDto.getPassword());   // Dto -> entity
 
         // 회원 중복 확인
-        Optional<User> found = userRepository.findByUsername(username);
-        if (found.isPresent()) {
+        Optional<User> found = userRepository.findByUsername(username);             // userRepository에서 유저 찾기
+        if (found.isPresent()) {                                                    // 유저가 있을 경우 중복 error
             throw new RequestException(ErrorCode.USER_OVERLAP_400);
         }
 
@@ -58,8 +56,8 @@ public class UserService {
         String password = loginRequestDto.getPassword();
 
         // 사용자 확인
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new RequestException(ErrorCode.NULL_USER_400)
+        User user = userRepository.findByUsername(username).orElseThrow(            // 유저 찾기
+                () -> new RequestException(ErrorCode.NULL_USER_400)                 // 없을 경우 유저없음 error
         );
 
         // 비밀번호 확인

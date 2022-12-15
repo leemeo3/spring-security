@@ -1,8 +1,6 @@
 package com.sparta.board.controller;
 
-import com.sparta.board.dto.BoardRequestDto;
-import com.sparta.board.dto.BoardResponseDto;
-import com.sparta.board.dto.ResponseMsgDto;
+import com.sparta.board.dto.*;
 import com.sparta.board.security.UserDetailsImpl;
 import com.sparta.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,14 +23,14 @@ public class BoardController {
 
     // 게시글 조회
     @GetMapping("/api/boards")
-    public List<BoardResponseDto> getBoard() {
-        return boardService.getBoard();
+    public ResponseEntity<BoardListResponseDto> getBoardList() {
+        return ResponseEntity.ok().body(boardService.getBoardList());
     }
 
     // 게시글 선택 조회
     @GetMapping("api/boards/{id}")
-    public BoardResponseDto getBoard(@PathVariable Long id) {
-        return boardService.getBoard(id);
+    public ResponseEntity<BoardCommentResponseDto> getBoardOne(@PathVariable Long id) {
+        return ResponseEntity.ok().body(boardService.getBoard(id));
     }
 
     // 게시글 수정
